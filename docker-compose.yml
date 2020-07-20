@@ -1,0 +1,213 @@
+version: '3.7'
+
+networks:
+  lan:
+    ipam:
+      driver: default
+      config:
+        - subnet: '10.42.42.0/24'
+
+volumes:
+  server1:
+  client1:
+  client2:
+  client3:
+  client4:
+  client5:
+
+services:
+  server1-node:
+    container_name: 'server1-node'
+    hostname: 'server1-node'
+    image: gcr.io/google_containers/pause:1.0
+    restart: always
+    dns: 8.8.8.8
+    networks:
+      lan:
+        ipv4_address: '10.42.42.10'
+
+  client1-node:
+    container_name: 'client1-node'
+    hostname: 'client1-node'
+    image: gcr.io/google_containers/pause:1.0
+    restart: always
+    dns: 8.8.8.8
+    networks:
+      lan:
+        ipv4_address: '10.42.42.11'
+
+  client2-node:
+    container_name: 'client2-node'
+    hostname: 'client2-node'
+    image: gcr.io/google_containers/pause:1.0
+    restart: always
+    dns: 8.8.8.8
+    networks:
+      lan:
+        ipv4_address: '10.42.42.12'
+
+  client3-node:
+    container_name: 'client3-node'
+    hostname: 'client3-node'
+    image: gcr.io/google_containers/pause:1.0
+    restart: always
+    dns: 8.8.8.8
+    networks:
+      lan:
+        ipv4_address: '10.42.42.13'
+
+  client4-node:
+    container_name: 'client4-node'
+    hostname: 'client4-node'
+    image: gcr.io/google_containers/pause:1.0
+    restart: always
+    dns: 8.8.8.8
+    networks:
+      lan:
+        ipv4_address: '10.42.42.14'
+
+  client5-node:
+    container_name: 'client5-node'
+    hostname: 'client5-node'
+    image: gcr.io/google_containers/pause:1.0
+    restart: always
+    dns: 8.8.8.8
+    networks:
+      lan:
+        ipv4_address: '10.42.42.15'
+
+  server1:
+    network_mode: 'service:server1-node'
+    depends_on:
+      - 'server1-node'
+    volumes:
+      - 'server1:/consul/data'
+    image: 'consul:1.6.4'
+    command:
+      - 'agent'
+      - '-hcl'
+      - |
+        bootstrap_expect     = 1
+        client_addr          = "0.0.0.0"
+        advertise_addr       = "10.42.42.10"
+        datacenter           = "dc1"
+        disable_update_check = true
+        log_level            = "debug"
+        primary_datacenter   = "dc1"
+        server               = true
+
+  client1:
+    network_mode: 'service:client1-node'
+    depends_on:
+      - 'client1-node'
+      - 'server1'
+    volumes:
+      - 'client1:/consul/data'
+    image: 'consul:1.6.4'
+    command:
+      - 'agent'
+      - '-hcl'
+      - |
+        client_addr          = "0.0.0.0"
+        advertise_addr       = "10.42.42.11"
+        datacenter           = "dc1"
+        disable_update_check = true
+        log_level            = "debug"
+        primary_datacenter   = "dc1"
+        retry_join           = ["10.42.42.10"]
+        server               = false
+        leave_on_terminate   = true
+        rejoin_after_leave   = true
+
+  client2:
+    network_mode: 'service:client2-node'
+    depends_on:
+      - 'client2-node'
+      - 'server1'
+    volumes:
+      - 'client2:/consul/data'
+    image: 'consul:1.6.4'
+    command:
+      - 'agent'
+      - '-hcl'
+      - |
+        client_addr          = "0.0.0.0"
+        advertise_addr       = "10.42.42.12"
+        datacenter           = "dc1"
+        disable_update_check = true
+        log_level            = "debug"
+        primary_datacenter   = "dc1"
+        retry_join           = ["10.42.42.10"]
+        server               = false
+        leave_on_terminate   = true
+        rejoin_after_leave   = true
+
+  client3:
+    network_mode: 'service:client3-node'
+    depends_on:
+      - 'client3-node'
+      - 'server1'
+    volumes:
+      - 'client3:/consul/data'
+    image: 'consul:1.6.4'
+    command:
+      - 'agent'
+      - '-hcl'
+      - |
+        client_addr          = "0.0.0.0"
+        advertise_addr       = "10.42.42.13"
+        datacenter           = "dc1"
+        disable_update_check = true
+        log_level            = "debug"
+        primary_datacenter   = "dc1"
+        retry_join           = ["10.42.42.10"]
+        server               = false
+        leave_on_terminate   = true
+        rejoin_after_leave   = true
+
+  client4:
+    network_mode: 'service:client4-node'
+    depends_on:
+      - 'client4-node'
+      - 'server1'
+    volumes:
+      - 'client4:/consul/data'
+    image: 'consul:1.6.4'
+    command:
+      - 'agent'
+      - '-hcl'
+      - |
+        client_addr          = "0.0.0.0"
+        advertise_addr       = "10.42.42.14"
+        datacenter           = "dc1"
+        disable_update_check = true
+        log_level            = "debug"
+        primary_datacenter   = "dc1"
+        retry_join           = ["10.42.42.10"]
+        server               = false
+        leave_on_terminate   = true
+        rejoin_after_leave   = true
+
+  client5:
+    network_mode: 'service:client5-node'
+    depends_on:
+      - 'client5-node'
+      - 'server1'
+    volumes:
+      - 'client5:/consul/data'
+    image: 'consul:1.6.4'
+    command:
+      - 'agent'
+      - '-hcl'
+      - |
+        client_addr          = "0.0.0.0"
+        advertise_addr       = "10.42.42.15"
+        datacenter           = "dc1"
+        disable_update_check = true
+        log_level            = "debug"
+        primary_datacenter   = "dc1"
+        retry_join           = ["10.42.42.10"]
+        server               = false
+        leave_on_terminate   = true
+        rejoin_after_leave   = true
+
