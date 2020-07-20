@@ -76,6 +76,66 @@ services:
       lan:
         ipv4_address: '10.42.42.15'
 
+  server1-comcast:
+    network_mode: 'service:server1-node'
+    depends_on:
+      - 'server1-node'
+    image: 'dockerinpractice/comcast'
+    privileged: true
+    command:
+      - '--latency=200'
+      - '--device=eth0'
+
+  client1-comcast:
+    network_mode: 'service:client1-node'
+    depends_on:
+      - 'client1-node'
+    image: 'dockerinpractice/comcast'
+    privileged: true
+    command:
+      - '--latency=200'
+      - '--device=eth0'
+
+  client2-comcast:
+    network_mode: 'service:client2-node'
+    depends_on:
+      - 'client2-node'
+    image: 'dockerinpractice/comcast'
+    privileged: true
+    command:
+      - '--latency=200'
+      - '--device=eth0'
+
+  client3-comcast:
+    network_mode: 'service:client3-node'
+    depends_on:
+      - 'client3-node'
+    image: 'dockerinpractice/comcast'
+    privileged: true
+    command:
+      - '--latency=200'
+      - '--device=eth0'
+
+  client4-comcast:
+    network_mode: 'service:client4-node'
+    depends_on:
+      - 'client4-node'
+    image: 'dockerinpractice/comcast'
+    privileged: true
+    command:
+      - '--latency=200'
+      - '--device=eth0'
+
+  client5-comcast:
+    network_mode: 'service:client5-node'
+    depends_on:
+      - 'client5-node'
+    image: 'dockerinpractice/comcast'
+    privileged: true
+    command:
+      - '--latency=200'
+      - '--device=eth0'
+
   server1:
     network_mode: 'service:server1-node'
     depends_on:
@@ -95,6 +155,9 @@ services:
         log_level            = "debug"
         primary_datacenter   = "dc1"
         server               = true
+        gossip_lan {
+          retransmit_mult = 200
+        }
 
   client1:
     network_mode: 'service:client1-node'
@@ -118,6 +181,9 @@ services:
         server               = false
         leave_on_terminate   = true
         rejoin_after_leave   = true
+        gossip_lan {
+          retransmit_mult = 20
+        }
 
   client2:
     network_mode: 'service:client2-node'
@@ -141,6 +207,9 @@ services:
         server               = false
         leave_on_terminate   = true
         rejoin_after_leave   = true
+        gossip_lan {
+          retransmit_mult = 200
+        }
 
   client3:
     network_mode: 'service:client3-node'
@@ -164,6 +233,9 @@ services:
         server               = false
         leave_on_terminate   = true
         rejoin_after_leave   = true
+        gossip_lan {
+          retransmit_mult = 200
+        }
 
   client4:
     network_mode: 'service:client4-node'
@@ -187,6 +259,9 @@ services:
         server               = false
         leave_on_terminate   = true
         rejoin_after_leave   = true
+        gossip_lan {
+          retransmit_mult = 200
+        }
 
   client5:
     network_mode: 'service:client5-node'
@@ -210,4 +285,7 @@ services:
         server               = false
         leave_on_terminate   = true
         rejoin_after_leave   = true
+        gossip_lan {
+          retransmit_mult = 200
+        }
 
